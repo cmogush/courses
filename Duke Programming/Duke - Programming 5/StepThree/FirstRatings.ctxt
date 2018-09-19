@@ -1,0 +1,27 @@
+#BlueJ class context
+comment0.params=filename
+comment0.target=java.util.ArrayList\ loadMovies(java.lang.String)
+comment1.params=movies
+comment1.target=void\ printMovieData(java.util.ArrayList)
+comment10.params=
+comment10.target=void\ testLoadMovies()
+comment10.text=\r\n\ \ \ \ public\ ArrayList<Double>\ listOfRatingsByID(String\ movieID,\ ArrayList<Rater>\ raterData){\r\n\ \ \ \ \ \ \ \ ArrayList<Double>\ ratings\ \=\ new\ ArrayList<Double>();\r\n\ \ \ \ \ \ \ \ for(Rater\ r\ \:\ raterData){\r\n\ \ \ \ \ \ \ \ \ \ \ \ for(String\ s\ \:\ r.getItemsRated()){\r\n\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ if(s.equals(movieID)){\ ratings.add(Double.parseDouble(s));}\r\n\ \ \ \ \ \ \ \ \ \ \ \ }\r\n\ \ \ \ \ \ \ \ }\r\n\ \ \ \ \ \ \ \ return\ ratings;\r\n\ \ \ \ }\r\n
+comment11.params=
+comment11.target=void\ testLoadRaters()
+comment2.params=filename
+comment2.target=java.util.ArrayList\ loadRaters(java.lang.String)
+comment3.params=raters
+comment3.target=void\ printRaterData(java.util.ArrayList)
+comment4.params=id\ raterData
+comment4.target=void\ printRatingsByID(java.lang.String,\ java.util.ArrayList)
+comment5.params=raterData
+comment5.target=int\ findMaxNoRatings(java.util.ArrayList)
+comment6.params=raterData\ maxNoRatings
+comment6.target=java.util.ArrayList\ findMaxRaters(java.util.ArrayList,\ int)
+comment7.params=raterData
+comment7.target=void\ printMaxRaters(java.util.ArrayList)
+comment8.params=movieID\ raterData
+comment8.target=int\ findNoRatingsForMovie(java.lang.String,\ java.util.ArrayList)
+comment9.params=raterData
+comment9.target=int\ findNoMoviesRated(java.util.ArrayList)
+numComments=12

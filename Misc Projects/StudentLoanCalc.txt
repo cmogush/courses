@@ -1,0 +1,250 @@
+//2017 Christopher Mogush
+//Student Loan Repayment Calculator
+import edu.duke.*;
+import org.apache.commons.csv.*;
+import java.util.Scanner;
+import java.io.*;
+import java.util.*;
+import org.apache.commons.csv.*;
+
+public class StudentLoans {
+    HashMap <Integer, Double> mapAmount = new HashMap<Integer, Double>();
+    HashMap <Integer, Double> mapInterest = new HashMap<Integer, Double>();
+    HashMap <Integer, Double> mapPercentage = new HashMap<Integer, Double>();
+    double allyPayment1;
+    double allyPayment2;
+    double chrisPayment;
+    double paymentReduction;
+    double extraPayment;
+    boolean aPaidOff;
+    boolean bPaidOff;
+    boolean cPaidOff;
+    int extraPaymentLoanNum;
+    int endloop;
+    int earlyPayoff;
+    
+    public StudentLoans(){
+        mapAmount = new HashMap<Integer, Double>();
+        mapInterest = new HashMap<Integer, Double>();
+        mapPercentage = new HashMap<Integer, Double>();
+        FileResource fr = new FileResource();
+        CSVParser parser = fr.getCSVParser();
+        for (CSVRecord currentRow : parser){ //iterate over each row
+            mapAmount.put(Integer.parseInt(currentRow.get("Loan")), Double.parseDouble(currentRow.get("Amount")));
+            mapInterest.put(Integer.parseInt(currentRow.get("Loan")), Double.parseDouble(currentRow.get("Interest")));
+            mapPercentage.put(Integer.parseInt(currentRow.get("Loan")), Double.parseDouble(currentRow.get("Percentage")));
+        }
+        allyPayment1 = 407;
+        allyPayment2 = 50;
+        chrisPayment = 140;
+        paymentReduction = 0;
+        extraPayment = 0;
+        extraPaymentLoanNum = 1;
+        
+        aPaidOff = false;
+        bPaidOff = false;
+        cPaidOff = false;
+        
+        earlyPayoff = 0;
+        endloop = 0;
+    }
+ 
+    public void testLoanEvaluation(){
+            //System.out.println(currentRow.get("Group"));
+            //System.out.println(currentRow.get("Loan"));
+            //System.out.println(currentRow.get("Amount"));
+            //System.out.println(currentRow.get("Interest"));
+            //System.out.println(currentRow.get("Payment"));
+            //System.out.println(currentRow.get("Percentage"));
+            //System.out.println(mapAmount.get(currentRow.get("Loan")) + " " + mapInterest.get(currentRow.get("Loan"))+ " " + mapPercentage.get(currentRow.get("Loan"))); 
+        Scanner reader = new Scanner(System.in);
+        System.out.println("Enter extra payment amount: ");
+        extraPayment = reader.nextDouble();
+        System.out.println(extraPayment);
+        
+        System.out.println("Enter no months for early payoff (enter 0 to skip): ");
+        earlyPayoff = reader.nextInt();
+        System.out.println(earlyPayoff);
+        
+        int countMonths = 0;
+        
+        while(endloop < 11){
+            countMonths += 1;
+            //GroupA
+            endloop = loopGroupA(10, countMonths);
+            endloop = loopGroupA(11, countMonths);
+            endloop = loopGroupA(4, countMonths);
+            endloop = loopGroupA(5, countMonths);
+            //GroupB
+            endloop = loopGroupB(1, countMonths);
+            endloop = loopGroupB(2, countMonths);
+            endloop = loopGroupB(3, countMonths);
+            endloop = loopGroupB(6, countMonths);
+            endloop = loopGroupB(7, countMonths);
+            endloop = loopGroupB(8, countMonths);
+            //GroupC
+            endloop = loopGroupC(9, countMonths);
+            
+            paymentReduction = 0;
+            
+            if(countMonths == earlyPayoff){
+                endloop = 11;
+            }
+        }
+        System.out.println("At a payment rate of: " + (chrisPayment + allyPayment1 + allyPayment2 + " with extra payment of: " + extraPayment));
+        System.out.println("The No. months to pay off all loans: " + countMonths);
+        System.out.println("Total amount spent: " + countMonths*(chrisPayment + allyPayment1 + allyPayment2 + extraPayment));
+        
+        double remainingBalance = mapAmount.get(1) + mapAmount.get(2) + mapAmount.get(3) + mapAmount.get(4) + mapAmount.get(5) + mapAmount.get(6) + mapAmount.get(7) + mapAmount.get(8) + mapAmount.get(9) + mapAmount.get(10) + mapAmount.get(11);
+        System.out.println("Forgiven amount: " + remainingBalance);
+    }
+    
+    public int nextLoanExtraPayment(int currentLoanNum){
+        int nextLoan = currentLoanNum + 1;
+        while(nextLoan < 11){
+            if(mapAmount.get(nextLoan)!= 0){
+                return nextLoan;
+            }
+            nextLoan += 1;
+        }
+        return nextLoan;
+    }
+    
+    public int loopGroupC(int loan, int count){
+         double payment = allyPayment2;
+         if(mapAmount.get(loan) > 0){
+            //System.out.println(mapAmount.get(loan));
+            mapAmount.put(loan, newAmount(loan, mapAmount.get(loan), mapInterest.get(loan), payment, paymentReduction, mapPercentage.get(loan)));
+            endloop = 0;
+         }
+         else{ 
+            endloop += 1;
+         }
+         if(mapAmount.get(loan) < 0){
+            paymentReduction = mapAmount.get(loan)*-1;
+            mapAmount.put(loan, 0.0);
+            System.out.println("Loan " + loan + " took " + count + " months to pay off.");
+            System.out.println("Final payment: " + paymentReduction);
+            cPaidOff = true;
+            if(loan == extraPaymentLoanNum){
+                extraPaymentLoanNum = nextLoanExtraPayment(loan);
+            }
+         }
+         return endloop;
+    }
+    
+    public int loopGroupB(int loan, int count){
+         double payment = allyPayment1;
+         if(aPaidOff){
+            payment += chrisPayment;
+         }
+         if(cPaidOff){
+            payment += allyPayment2;
+         }
+         if(mapAmount.get(loan) > 0){
+            //System.out.println(mapAmount.get(loan));
+            mapAmount.put(loan, newAmount(loan, mapAmount.get(loan), mapInterest.get(loan), payment, paymentReduction, mapPercentage.get(loan)));
+            endloop = 0;
+         }
+         else{ 
+            endloop += 1;
+         }
+         if(mapAmount.get(loan) < 0){
+            if(loan == 1){
+                redistributePercentagesGroupB(1, 2, 3, 6, 7, 8);
+            }
+            if(loan == 2){
+                redistributePercentagesGroupB(2, 1, 3, 6, 7, 8);
+            }
+            if(loan == 3){
+                redistributePercentagesGroupB(3, 2, 1, 6, 7, 8);
+            }
+            if(loan == 6){
+                redistributePercentagesGroupB(6, 2, 3, 1, 7, 8);
+            }
+            if(loan == 7){
+                redistributePercentagesGroupB(7, 2, 3, 6, 1, 8);
+            }
+            if(loan == 8){
+                redistributePercentagesGroupB(8, 2, 3, 6, 7, 1);
+            }
+            paymentReduction = mapAmount.get(loan)*-1;
+            mapAmount.put(loan, 0.0);
+            System.out.println("Loan " + loan + " took " + count + " months to pay off.");
+            System.out.println("Final payment: " + paymentReduction);
+            bPaidOff = true;
+            if(loan == extraPaymentLoanNum){
+                extraPaymentLoanNum = nextLoanExtraPayment(loan);
+            }
+         }
+         return endloop;
+    }
+    
+    public int loopGroupA(int loan, int count){
+         double payment = chrisPayment;
+         if(mapAmount.get(loan) > 0){
+            //System.out.println(mapAmount.get(loan));
+            mapAmount.put(loan, newAmount(loan, mapAmount.get(loan), mapInterest.get(loan), payment, paymentReduction, mapPercentage.get(loan)));
+            endloop = 0;
+         }
+         else{ 
+            endloop += 1;
+         }
+         if(mapAmount.get(loan) < 0){
+            if(loan == 10){
+                redistributePercentagesGroupA(10, 11, 4, 5);
+            }
+            if(loan == 11){
+                redistributePercentagesGroupA(11, 10, 4, 5);
+            }
+            if(loan == 4){
+                redistributePercentagesGroupA(4, 11, 10, 5);
+            }
+            if(loan == 5){
+                redistributePercentagesGroupA(5, 11, 10, 4);
+            }
+            paymentReduction = mapAmount.get(loan)*-1;
+            mapAmount.put(loan, 0.0);
+            System.out.println("Loan " + loan + " took " + count + " months to pay off.");
+            System.out.println("Final payment: " + paymentReduction);
+            if((mapAmount.get(10) + mapAmount.get(11) + mapAmount.get(4) + mapAmount.get(5)) == 0){
+                aPaidOff = true;
+            }
+            if(loan == extraPaymentLoanNum){
+                extraPaymentLoanNum = nextLoanExtraPayment(loan);
+            }
+         }
+         return endloop;
+    }
+    
+    public void redistributePercentagesGroupA(int per1, int per2, int per3, int per4){
+        //System.out.println(mapPercentage.get(per1) + "\t" + mapPercentage.get(per2) + "\t" + mapPercentage.get(per3) + "\t" + mapPercentage.get(per4));
+        double sum = mapPercentage.get(per2) + mapPercentage.get(per3) + mapPercentage.get(per4);
+        mapPercentage.put(per2, mapPercentage.get(per1)*mapPercentage.get(per2)/sum + mapPercentage.get(per2));
+        mapPercentage.put(per3, mapPercentage.get(per1)*mapPercentage.get(per3)/sum + mapPercentage.get(per3));
+        mapPercentage.put(per4, mapPercentage.get(per1)*mapPercentage.get(per4)/sum + mapPercentage.get(per4));
+        mapPercentage.put(per1, 0.0);
+        //System.out.println(mapPercentage.get(per1) + "\t" + mapPercentage.get(per2) + "\t" + mapPercentage.get(per3) + "\t" + mapPercentage.get(per4));
+    }
+    
+    public void redistributePercentagesGroupB(int per1, int per2, int per3, int per4, int per5, int per6){
+        //System.out.println(mapPercentage.get(per1) + "\t" + mapPercentage.get(per2) + "\t" + mapPercentage.get(per3) + "\t" + mapPercentage.get(per4) + "\t" + mapPercentage.get(per5)+ "\t" + mapPercentage.get(per6));
+        double sum = mapPercentage.get(per2) + mapPercentage.get(per3) + mapPercentage.get(per4) + mapPercentage.get(per5) + mapPercentage.get(per6);
+        mapPercentage.put(per2, mapPercentage.get(per1)*mapPercentage.get(per2)/sum + mapPercentage.get(per2));
+        mapPercentage.put(per3, mapPercentage.get(per1)*mapPercentage.get(per3)/sum + mapPercentage.get(per3));
+        mapPercentage.put(per4, mapPercentage.get(per1)*mapPercentage.get(per4)/sum + mapPercentage.get(per4));
+        mapPercentage.put(per5, mapPercentage.get(per1)*mapPercentage.get(per5)/sum + mapPercentage.get(per5));
+        mapPercentage.put(per6, mapPercentage.get(per1)*mapPercentage.get(per6)/sum + mapPercentage.get(per6));
+        mapPercentage.put(per1, 0.0);
+        //System.out.println(mapPercentage.get(per1) + "\t" + mapPercentage.get(per2) + "\t" + mapPercentage.get(per3) + "\t" + mapPercentage.get(per4) + "\t" + mapPercentage.get(per5)+ "\t" + mapPercentage.get(per6));
+    }
+    
+    
+    public double newAmount(int loan, double amount, double interest, double payment, double paymentReduction, double percentage){
+        double newAmount = amount + (amount*interest/12) - ((payment - paymentReduction)*percentage);
+        if(loan == extraPaymentLoanNum){
+            newAmount = newAmount - extraPayment;
+        }
+        return newAmount;
+    }
+}

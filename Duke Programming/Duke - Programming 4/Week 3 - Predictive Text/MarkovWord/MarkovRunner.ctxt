@@ -1,0 +1,8 @@
+#BlueJ class context
+comment0.params=
+comment0.target=void\ runMarkov()
+comment1.params=markov\ text\ size
+comment1.target=void\ runModel(IMarkovModel,\ java.lang.String,\ int)
+comment2.params=s
+comment2.target=void\ printOut(java.lang.String)
+numComments=3
