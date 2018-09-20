@@ -19,6 +19,7 @@ public class MyLinkedListTester {
 	private static final int LONG_LIST_LENGTH =10; 
 
 	MyLinkedList<String> shortList;
+	MyLinkedList<String> shortList2;
 	MyLinkedList<Integer> emptyList;
 	MyLinkedList<Integer> longerList;
 	MyLinkedList<Integer> list1;
@@ -42,6 +43,10 @@ public class MyLinkedListTester {
 		list1.add(65);
 		list1.add(21);
 		list1.add(42);
+		
+		shortList2 = new MyLinkedList<String>();
+		shortList2.add("a");
+		shortList2.add("b");
 		
 	}
 
@@ -100,6 +105,9 @@ public class MyLinkedListTester {
 		catch (IndexOutOfBoundsException e) {
 		}
 		
+		shortList.add("C");
+		assertEquals("Get: check element 2 is correct ", (String)"C", shortList.get(2));
+		
 	}
 	
 	
@@ -114,7 +122,19 @@ public class MyLinkedListTester {
 		assertEquals("Remove: check element 0 is correct ", (Integer)21, list1.get(0));
 		assertEquals("Remove: check size is correct ", 2, list1.size());
 		
-		// TODO: Add more tests here
+		try {
+			shortList.remove(1000);
+			fail("check not working");
+		}
+		catch (IndexOutOfBoundsException e) {
+		}
+		
+		try {
+			shortList.remove(-1);
+			fail("check not working");
+		}
+		catch (IndexOutOfBoundsException e) {
+		}
 	}
 	
 	/** Test adding an element into the end of the list, specifically
@@ -123,7 +143,14 @@ public class MyLinkedListTester {
 	@Test
 	public void testAddEnd()
 	{
-        // TODO: implement this test
+        // DONE
+		
+		try {
+			shortList.add(null);
+			fail("check not working");
+		}
+		catch (NullPointerException e) {
+		}
 		
 	}
 
@@ -132,7 +159,8 @@ public class MyLinkedListTester {
 	@Test
 	public void testSize()
 	{
-		// TODO: implement this test
+		// DONE
+		assertEquals("size: check size is correct ", 2, shortList.size());
 	}
 
 	
@@ -144,8 +172,29 @@ public class MyLinkedListTester {
 	@Test
 	public void testAddAtIndex()
 	{
-        // TODO: implement this test
+        // DONE
+		try {
+			shortList.add(null);
+			fail("check not working");
+		}
+		catch (NullPointerException e) {
+		}
 		
+		try {
+			shortList.add(1000,"test");
+			fail("check not working");
+		}
+		catch (IndexOutOfBoundsException e) {
+		}
+		try {
+			shortList.add(-1,"test");
+			fail("check not working");
+		}
+		catch (IndexOutOfBoundsException e) {
+		}
+		
+		shortList.add(1, "testIndex1");
+		assertEquals("Get: check element @ 1 is correct ", (String)"testIndex1", shortList.get(1));
 	}
 	
 	/** Test setting an element in the list */
@@ -153,7 +202,22 @@ public class MyLinkedListTester {
 	public void testSet()
 	{
 	    // TODO: implement this test
+		shortList.set(1, "Zangief");
+		assertEquals("Get: check element @ 1 is correct ", (String)"Zangief", shortList.get(1));
 	    
+		try {
+			shortList.set(1000,"test");
+			fail("check not working");
+		}
+		catch (IndexOutOfBoundsException e) {
+		}
+		
+		try {
+			shortList.set(-1, "test");
+			fail("check not working");
+		}
+		catch (IndexOutOfBoundsException e) {
+		}
 	}
 	
 	

@@ -157,9 +157,11 @@ public abstract class Document {
 		double numSentences = getNumSentences();
 		double numSyllables = getNumSyllables();
 		
+		/*
 		System.out.println(numWords);
 		System.out.println(numSentences);
 		System.out.println(numSyllables);
+		*/
 		
 		double flesch = 206.835
 				-1.015 * (numWords / numSentences)

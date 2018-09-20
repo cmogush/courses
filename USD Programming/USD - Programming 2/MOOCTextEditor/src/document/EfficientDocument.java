@@ -54,6 +54,20 @@ public class EfficientDocument extends Document {
 		
 		// TODO: Finish this method.  Remember the countSyllables method from 
 		// Document.  That will come in handy here.  isWord defined above will also help.
+
+		int check = 0; //a check to see if sentence ending without punctuation.
+		for(String t : tokens) {
+			if(isWord(t)) {
+				numWords++;
+				numSyllables += countSyllables(t);
+				check = 1;
+			}
+			else {
+				numSentences++;
+				check = 0;
+			}
+		}
+		if(check == 1) { numSentences++; } //if last token was a word without punctuation, then add 1 to numSentences count
 	}
 
 	
@@ -73,7 +87,7 @@ public class EfficientDocument extends Document {
 	@Override
 	public int getNumSentences() {
 		//TODO: write this method.  Hint: It's simple
-		return 0;
+		return numSentences;
 	}
 
 	
@@ -94,7 +108,7 @@ public class EfficientDocument extends Document {
 	@Override
 	public int getNumWords() {
 		//TODO: write this method.  Hint: It's simple
-	    return 0;
+	    return numWords;
 	}
 
 
@@ -116,7 +130,7 @@ public class EfficientDocument extends Document {
 	@Override
 	public int getNumSyllables() {
         //TODO: write this method.  Hint: It's simple
-        return 0;
+        return numSyllables;
 	}
 	
 	// Can be used for testing
@@ -139,6 +153,7 @@ public class EfficientDocument extends Document {
 		testCase(new EfficientDocument("Sentences?!"), 3, 1, 1);
 		testCase(new EfficientDocument("Lorem ipsum dolor sit amet, qui ex choro quodsi moderatius, nam dolores explicari forensibus ad."),
 		         32, 15, 1);
+		testCase(new EfficientDocument("Squeegee"), 2, 1, 1);
 		
 	}
 	
