@@ -3,7 +3,6 @@ package application;
 import java.io.IOException;
 import java.util.List;
 
-import document.BasicDocument;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.geometry.Insets;
